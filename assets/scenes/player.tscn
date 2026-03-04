@@ -2,13 +2,31 @@
 
 [ext_resource type="Script" uid="uid://djqmvix7nu1vc" path="res://player.gd" id="1_14505"]
 [ext_resource type="Texture2D" uid="uid://csnb6yby6rc6r" path="res://assets/sprites/playerLeft.png" id="2_4wcc8"]
+[ext_resource type="Texture2D" uid="uid://cg2mjrxmq6ale" path="res://assets/sprites/playerCrouchLeft.png" id="2_8sknh"]
+[ext_resource type="Texture2D" uid="uid://toit4wcigew0" path="res://assets/sprites/playerCrouchRight.png" id="3_0gfpk"]
 [ext_resource type="Texture2D" uid="uid://pblhebkwonqw" path="res://assets/sprites/playerRight.png" id="3_8sknh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0gfpk"]
-size = Vector2(19.199999, 19.199999)
+size = Vector2(48, 26)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_0hrit"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_8sknh")
+}],
+"loop": true,
+"name": &"crouchLeft",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_0gfpk")
+}],
+"loop": true,
+"name": &"crouchRight",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("2_4wcc8")
@@ -27,21 +45,20 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o5c66"]
-size = Vector2(48, 24)
+size = Vector2(48, 13)
 
 [node name="Player" type="Area2D" unique_id=1869804639]
 script = ExtResource("1_14505")
 
 [node name="DefaultCollision" type="CollisionShape2D" parent="." unique_id=580313543]
-position = Vector2(-1.1920929e-06, -1.1920929e-06)
-scale = Vector2(2.5, 2.5)
+position = Vector2(0, -2.3841858e-07)
 shape = SubResource("RectangleShape2D_0gfpk")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=855208123]
 scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("SpriteFrames_0hrit")
-animation = &"moveLeft"
+animation = &"crouchRight"
 
 [node name="CrouchCollision" type="CollisionShape2D" parent="." unique_id=1434391255]
-position = Vector2(0, 12)
+position = Vector2(0, 6.5)
 shape = SubResource("RectangleShape2D_o5c66")
