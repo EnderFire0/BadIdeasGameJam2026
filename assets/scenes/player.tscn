@@ -6,9 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://toit4wcigew0" path="res://assets/sprites/playerCrouchRight.png" id="3_0gfpk"]
 [ext_resource type="Texture2D" uid="uid://pblhebkwonqw" path="res://assets/sprites/playerRight.png" id="3_8sknh"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0gfpk"]
-size = Vector2(48, 26)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_0hrit"]
 animations = [{
 "frames": [{
@@ -44,21 +41,75 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_o5c66"]
-size = Vector2(48, 13)
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_8sknh"]
+a = Vector2(0, -12)
+b = Vector2(0, 11)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_0gfpk"]
+a = Vector2(0, -12)
+b = Vector2(0, 11)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_0hrit"]
+a = Vector2(23, 0)
+b = Vector2(-23, 0)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_o5c66"]
+a = Vector2(23, 0)
+b = Vector2(-23, 0)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_tc801"]
+a = Vector2(0, -5)
+b = Vector2(0, 5)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_60g6h"]
+a = Vector2(0, -5)
+b = Vector2(0, 5)
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_hrrj1"]
+a = Vector2(23, 0)
+b = Vector2(-23, 0)
 
 [node name="Player" type="Area2D" unique_id=1869804639]
 script = ExtResource("1_14505")
 
-[node name="DefaultCollision" type="CollisionShape2D" parent="." unique_id=580313543]
-position = Vector2(0, -2.3841858e-07)
-shape = SubResource("RectangleShape2D_0gfpk")
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=855208123]
 scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("SpriteFrames_0hrit")
-animation = &"crouchRight"
+animation = &"moveRight"
 
-[node name="CrouchCollision" type="CollisionShape2D" parent="." unique_id=1434391255]
-position = Vector2(0, 6.5)
-shape = SubResource("RectangleShape2D_o5c66")
+[node name="DefaultCollisionLeft" type="CollisionShape2D" parent="." unique_id=187015127]
+position = Vector2(-24, 0)
+scale = Vector2(0.5, 1)
+shape = SubResource("SegmentShape2D_8sknh")
+
+[node name="DefaultCollisionRight" type="CollisionShape2D" parent="." unique_id=637524445]
+position = Vector2(24, 0)
+scale = Vector2(0.5, 1)
+shape = SubResource("SegmentShape2D_0gfpk")
+
+[node name="DefaultCollisionTop" type="CollisionShape2D" parent="." unique_id=1798664498]
+position = Vector2(0, -13)
+scale = Vector2(1, 0.5)
+shape = SubResource("SegmentShape2D_0hrit")
+
+[node name="CollisionBottom" type="CollisionShape2D" parent="." unique_id=1719126966]
+position = Vector2(0, 17)
+scale = Vector2(1, 0.5)
+shape = SubResource("SegmentShape2D_o5c66")
+
+[node name="CrouchCollisionLeft" type="CollisionShape2D" parent="." unique_id=684963063]
+position = Vector2(-24, 6)
+scale = Vector2(0.5, 1)
+shape = SubResource("SegmentShape2D_tc801")
+
+[node name="CrouchCollisionRight" type="CollisionShape2D" parent="." unique_id=1633621013]
+position = Vector2(24, 6)
+scale = Vector2(0.5, 1)
+shape = SubResource("SegmentShape2D_60g6h")
+
+[node name="CrouchCollisionTop" type="CollisionShape2D" parent="." unique_id=1451820654]
+scale = Vector2(1, 0.5)
+shape = SubResource("SegmentShape2D_hrrj1")
+
+[connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
+[connection signal="body_shape_exited" from="." to="." method="_on_body_shape_exited"]

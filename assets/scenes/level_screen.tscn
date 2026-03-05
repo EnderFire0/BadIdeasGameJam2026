@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dxaq1oqpoyhob"]
+
+[ext_resource type="Script" uid="uid://c1h5hei25ula" path="res://level_screen.gd" id="1_65efp"]
+[ext_resource type="PackedScene" uid="uid://dqd3y2i3qbxew" path="res://assets/scenes/player.tscn" id="2_s68qs"]
+
+[node name="LevelScreen" type="Node" unique_id=1208870112]
+script = ExtResource("1_65efp")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=469687037]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Player" parent="." unique_id=1869804639 instance=ExtResource("2_s68qs")]
+position = Vector2(112, 33)

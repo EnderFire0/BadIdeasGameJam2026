@@ -7,6 +7,15 @@ var onGround : bool;
 var isJumping : bool;
 var isCrouching : bool;
 var facing : String;
+var colliding : Dictionary = {
+	"bottom" : 0,
+	"crouchLeft" : 0,
+	"crouchRight" : 0,
+	"crouchTop" : 0,
+	"defaultLeft" : 0,
+	"defaultRight" : 0,
+	"defaultTop" : 0
+}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -16,9 +25,19 @@ func _ready() -> void:
 	isCrouching = false;
 	facing = "right";
 	$AnimatedSprite2D.animation = "moveRight";
-	pass # Replace with function body.
 
-func get_velocity_sign() -> int:
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if (Input.is_action_just_pressed("crouch") && onGround):
+		isCrouching = true;
+		playerMaxSpeed /= 2;
+	if (Input.is_action_just_released("crouch") && isCrouching):
+		isCrouching = false;
+		playerMaxSpeed *= 2;
+	movement(delta);
+	update_animation();
+
+func get_velocity_x_sign() -> int:
 	if (playerVel.x < 0):
 		return -1;
 	elif (playerVel.x > 0):
@@ -33,17 +52,17 @@ func movement(delta: float) -> void:
 	if (Input.is_action_pressed("move_left") && Input.is_action_pressed("move_right")):
 		playerXAccel = -playerBaseAccel * sign(playerVel.x) * delta;
 	elif (Input.is_action_pressed("move_left")):
-		playerXAccel = -playerBaseAccel * delta;
+		playerXAccel = -playerBaseAccel * delta * (1 if get_velocity_x_sign() == -1 else 2);
 		facing = "left";
 	elif (Input.is_action_pressed("move_right")):
-		playerXAccel = playerBaseAccel * delta;
+		playerXAccel = playerBaseAccel * delta * (1 if get_velocity_x_sign() == 1 else 2);
 		facing = "right";
 	else:
-		speedDecaySign = -get_velocity_sign();
+		speedDecaySign = -get_velocity_x_sign();
 		playerXAccel = 1.5 * playerBaseAccel * speedDecaySign * delta;
 	#for when player starts to crouch
 	if (abs(playerVel.x) > playerMaxSpeed):
-		playerVel.x = max(playerMaxSpeed, (abs(playerVel.x) - 0.75 * playerBaseAccel * delta)) * get_velocity_sign();
+		playerVel.x = max(playerMaxSpeed, (abs(playerVel.x) - 0.75 * playerBaseAccel * delta)) * get_velocity_x_sign();
 	else:
 		playerVel.x = clampf(playerVel.x + (playerXAccel), -playerMaxSpeed, playerMaxSpeed);
 	#for cases where speed is small enough to not decay to 0(it fixes smth, idk)
@@ -58,13 +77,42 @@ func movement(delta: float) -> void:
 			onGround = false;
 		else:
 			playerVel.y = 0;
-	elif (Input.is_action_just_released("jump") && (playerVel.y < 0)):
-		playerVel.y = 0;
-		playerVel.y = min(playerVel.y + playerBaseAccel * delta, playerBaseAccel * 4);
+	elif (Input.is_action_just_released("jump")):
+		isJumping = false;
+		if (playerVel.y < 0):
+			playerVel.y = 0;
+			playerVel.y = min(playerVel.y + playerBaseAccel * delta, playerBaseAccel * 4);
 	else:
 		playerVel.y = min(playerVel.y + playerBaseAccel * delta, playerBaseAccel * 4);
 	
 	position += playerVel * delta;
+	
+	if (!isCrouching):
+		if (colliding["defaultLeft"]):
+			position.x = position.x - playerVel.x * delta;
+			playerVel.x = max(0, playerVel.x);
+		if (colliding["defaultRight"]):
+			position.x = position.x - playerVel.x * delta;
+			playerVel.x = min(0, playerVel.x);
+		if (colliding["defaultTop"]):
+			position.y = position.y - playerVel.y * delta;
+			playerVel.y = max(0, playerVel.y);
+	else:
+		if (colliding["crouchLeft"]):
+			position.x = position.x - playerVel.x * delta;
+			playerVel.x = max(0, playerVel.x);
+		if (colliding["crouchRight"]):
+			position.x = position.x - playerVel.x * delta;
+			playerVel.x = min(0, playerVel.x);
+		if (colliding["crouchTop"]):
+			position.y = position.y - playerVel.y * delta;
+			playerVel.y = max(0, playerVel.y);
+	if (!isJumping):
+		if (colliding["bottom"]):
+			position.y = position.y - playerVel.y * delta;
+			playerVel.y = min(0, playerVel.y);
+			
+	
 
 func update_animation() -> void:
 	if (facing == "left"):
@@ -78,13 +126,45 @@ func update_animation() -> void:
 		else:
 			$AnimatedSprite2D.animation = "moveRight";
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	if (Input.is_action_just_pressed("crouch") && onGround):
-		isCrouching = true;
-		playerMaxSpeed /= 2;
-	if (Input.is_action_just_released("crouch") && isCrouching):
-		isCrouching = false;
-		playerMaxSpeed *= 2;
-	movement(delta);
-	update_animation();
+func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int, local_shape_index: int) -> void:
+	var collisionBox = shape_owner_get_owner(shape_find_owner(local_shape_index));
+	var bodyShapeNode : CollisionShape2D = body.shape_owner_get_owner(body.shape_find_owner(body_shape_index));
+	var bodyRect : Rect2 = bodyShapeNode.get_shape().get_rect();
+	
+	if (collisionBox == $CrouchCollisionTop):
+		colliding["crouchTop"] += 1;
+	elif (collisionBox == $CrouchCollisionLeft):
+		colliding["crouchLeft"] += 1;
+	elif (collisionBox == $CrouchCollisionRight):
+		colliding["crouchRight"] += 1;
+	elif (collisionBox == $DefaultCollisionTop):
+		colliding["defaultTop"] += 1;
+	elif (collisionBox == $DefaultCollisionLeft):
+		colliding["defaultLeft"] += 1;
+	elif (collisionBox == $DefaultCollisionRight):
+		colliding["defaultRight"] += 1;
+	elif (collisionBox == $CollisionBottom):
+		colliding["bottom"] += 1;
+		#13 is from the position of $CollisionBottom
+		position.y = bodyShapeNode.position.y - (bodyRect.size.y / 2) - 13;
+		onGround = true;
+	
+
+func _on_body_shape_exited(_body_rid: RID, _body: Node2D, _body_shape_index: int, local_shape_index: int) -> void:
+	var collisionBox : CollisionShape2D = shape_owner_get_owner(shape_find_owner(local_shape_index));
+
+	if (collisionBox == $CrouchCollisionTop):
+		colliding["crouchTop"] -= 1;
+	elif (collisionBox == $CrouchCollisionLeft):
+		colliding["crouchLeft"] -= 1;
+	elif (collisionBox == $CrouchCollisionRight):
+		colliding["crouchRight"] -= 1;
+	elif (collisionBox == $DefaultCollisionTop):
+		colliding["defaultTop"] -= 1;
+	elif (collisionBox == $DefaultCollisionLeft):
+		colliding["defaultLeft"] -= 1;
+	elif (collisionBox == $DefaultCollisionRight):
+		colliding["defaultRight"] -= 1;
+	elif (collisionBox == $CollisionBottom):
+		colliding["bottom"] -= 1;
+		onGround = false;
