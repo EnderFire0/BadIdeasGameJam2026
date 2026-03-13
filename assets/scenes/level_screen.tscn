@@ -5,6 +5,7 @@
 
 [node name="LevelScreen" type="Node" unique_id=1208870112]
 script = ExtResource("1_65efp")
+geometry = Array[Rect2]([Rect2(100, 200, 100, 50), Rect2(50, 100, 50, 100)])
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=469687037]
 offset_right = 40.0

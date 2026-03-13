@@ -17,6 +17,8 @@ var colliding : Dictionary = {
 	"defaultTop" : 0
 }
 
+const playerSize : Vector2 = Vector2(48, 26);
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	playerVel = Vector2.ZERO;
@@ -127,6 +129,8 @@ func update_animation() -> void:
 			$AnimatedSprite2D.animation = "moveRight";
 
 func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int, local_shape_index: int) -> void:
+	pass
+	"""
 	var collisionBox = shape_owner_get_owner(shape_find_owner(local_shape_index));
 	var bodyShapeNode : CollisionShape2D = body.shape_owner_get_owner(body.shape_find_owner(body_shape_index));
 	var bodyRect : Rect2 = bodyShapeNode.get_shape().get_rect();
@@ -134,22 +138,27 @@ func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int,
 	if (collisionBox == $CrouchCollisionTop):
 		colliding["crouchTop"] += 1;
 	elif (collisionBox == $CrouchCollisionLeft):
+		position.x = bodyShapeNode.position.x + (bodyRect.size.x / 2) + (playerSize.x / 2);
 		colliding["crouchLeft"] += 1;
 	elif (collisionBox == $CrouchCollisionRight):
+		position.x = bodyShapeNode.position.x - (bodyRect.size.x / 2) - (playerSize.x / 2);
 		colliding["crouchRight"] += 1;
 	elif (collisionBox == $DefaultCollisionTop):
 		colliding["defaultTop"] += 1;
 	elif (collisionBox == $DefaultCollisionLeft):
+		if (!isCrouching):
+			position.x = bodyShapeNode.position.x + (bodyRect.size.x / 2) + (playerSize.x / 2);
 		colliding["defaultLeft"] += 1;
 	elif (collisionBox == $DefaultCollisionRight):
+		if (!isCrouching):
+			position.x = bodyShapeNode.position.x - (bodyRect.size.x / 2) - (playerSize.x / 2);
 		colliding["defaultRight"] += 1;
 	elif (collisionBox == $CollisionBottom):
 		colliding["bottom"] += 1;
-		#13 is from the position of $CollisionBottom
-		position.y = bodyShapeNode.position.y - (bodyRect.size.y / 2) - 13;
+		position.y = bodyShapeNode.position.y - (bodyRect.size.y / 2) - (playerSize.y / 2);
 		onGround = true;
 	
-
+"""
 func _on_body_shape_exited(_body_rid: RID, _body: Node2D, _body_shape_index: int, local_shape_index: int) -> void:
 	var collisionBox : CollisionShape2D = shape_owner_get_owner(shape_find_owner(local_shape_index));
 
