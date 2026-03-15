@@ -87,32 +87,27 @@ func movement(delta: float) -> void:
 	else:
 		playerVel.y = min(playerVel.y + playerBaseAccel * delta, playerBaseAccel * 4);
 	
-	position += playerVel * delta;
-	
 	if (!isCrouching):
 		if (colliding["defaultLeft"]):
-			position.x = position.x - playerVel.x * delta;
 			playerVel.x = max(0, playerVel.x);
 		if (colliding["defaultRight"]):
-			position.x = position.x - playerVel.x * delta;
 			playerVel.x = min(0, playerVel.x);
 		if (colliding["defaultTop"]):
-			position.y = position.y - playerVel.y * delta;
 			playerVel.y = max(0, playerVel.y);
 	else:
 		if (colliding["crouchLeft"]):
-			position.x = position.x - playerVel.x * delta;
 			playerVel.x = max(0, playerVel.x);
 		if (colliding["crouchRight"]):
-			position.x = position.x - playerVel.x * delta;
 			playerVel.x = min(0, playerVel.x);
 		if (colliding["crouchTop"]):
-			position.y = position.y - playerVel.y * delta;
 			playerVel.y = max(0, playerVel.y);
 	if (!isJumping):
 		if (colliding["bottom"]):
-			position.y = position.y - playerVel.y * delta;
 			playerVel.y = min(0, playerVel.y);
+	
+	position += playerVel * delta;
+	
+	
 			
 	
 
@@ -129,8 +124,6 @@ func update_animation() -> void:
 			$AnimatedSprite2D.animation = "moveRight";
 
 func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int, local_shape_index: int) -> void:
-	pass
-	"""
 	var collisionBox = shape_owner_get_owner(shape_find_owner(local_shape_index));
 	var bodyShapeNode : CollisionShape2D = body.shape_owner_get_owner(body.shape_find_owner(body_shape_index));
 	var bodyRect : Rect2 = bodyShapeNode.get_shape().get_rect();
@@ -153,12 +146,11 @@ func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int,
 		if (!isCrouching):
 			position.x = bodyShapeNode.position.x - (bodyRect.size.x / 2) - (playerSize.x / 2);
 		colliding["defaultRight"] += 1;
-	elif (collisionBox == $CollisionBottom):
+	elif ((collisionBox == $CollisionBottom) && position.y < (bodyShapeNode.position.y - (bodyRect.size.y / 2))):
 		colliding["bottom"] += 1;
 		position.y = bodyShapeNode.position.y - (bodyRect.size.y / 2) - (playerSize.y / 2);
 		onGround = true;
-	
-"""
+
 func _on_body_shape_exited(_body_rid: RID, _body: Node2D, _body_shape_index: int, local_shape_index: int) -> void:
 	var collisionBox : CollisionShape2D = shape_owner_get_owner(shape_find_owner(local_shape_index));
 
