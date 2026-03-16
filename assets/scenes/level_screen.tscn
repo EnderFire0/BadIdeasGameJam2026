@@ -3,13 +3,28 @@
 [ext_resource type="Script" uid="uid://c1h5hei25ula" path="res://level_screen.gd" id="1_65efp"]
 [ext_resource type="PackedScene" uid="uid://dqd3y2i3qbxew" path="res://assets/scenes/player.tscn" id="2_s68qs"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_65efp"]
+size = Vector2(30, 648)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s68qs"]
+size = Vector2(1123, 30)
+
 [node name="LevelScreen" type="Node" unique_id=1208870112]
 script = ExtResource("1_65efp")
-geometry = Array[Rect2]([Rect2(100, 200, 100, 50), Rect2(50, 100, 50, 100)])
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=469687037]
 offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Player" parent="." unique_id=1869804639 instance=ExtResource("2_s68qs")]
-position = Vector2(112, 33)
+position = Vector2(353, 434)
+
+[node name="Level Geometry" type="StaticBody2D" parent="." unique_id=1977403684]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level Geometry" unique_id=531062073]
+position = Vector2(15, 324)
+shape = SubResource("RectangleShape2D_65efp")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Level Geometry" unique_id=639560507]
+position = Vector2(590.5, 633)
+shape = SubResource("RectangleShape2D_s68qs")
