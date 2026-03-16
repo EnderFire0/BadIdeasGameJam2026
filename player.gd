@@ -22,7 +22,7 @@ const playerSize : Vector2 = Vector2(48, 26);
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	playerVel = Vector2.ZERO;
-	onGround = true;
+	onGround = false;
 	isJumping = false;
 	isCrouching = false;
 	facing = "right";
@@ -73,9 +73,9 @@ func movement(delta: float) -> void:
 	
 	# movement in the y-direction
 	if (onGround):
-		if (Input.is_action_pressed("jump")):
+		if (Input.is_action_just_pressed("jump")):
 			isJumping = true;
-			playerVel.y = -playerBaseAccel;
+			playerVel.y = -playerBaseAccel * 1.2;
 			onGround = false;
 		else:
 			playerVel.y = 0;
@@ -85,7 +85,7 @@ func movement(delta: float) -> void:
 			playerVel.y = 0;
 			playerVel.y = min(playerVel.y + playerBaseAccel * delta, playerBaseAccel * 4);
 	else:
-		playerVel.y = min(playerVel.y + playerBaseAccel * delta, playerBaseAccel * 4);
+		playerVel.y = min(playerVel.y + playerBaseAccel * 2 * delta, playerBaseAccel * 4);
 	
 	if (!isCrouching):
 		if (colliding["defaultLeft"]):
@@ -106,9 +106,6 @@ func movement(delta: float) -> void:
 			playerVel.y = min(0, playerVel.y);
 	
 	position += playerVel * delta;
-	
-	
-			
 	
 
 func update_animation() -> void:
@@ -146,7 +143,7 @@ func _on_body_shape_entered(_body_rid: RID, body: Node2D, body_shape_index: int,
 		if (!isCrouching):
 			position.x = bodyShapeNode.position.x - (bodyRect.size.x / 2) - (playerSize.x / 2);
 		colliding["defaultRight"] += 1;
-	elif ((collisionBox == $CollisionBottom) && position.y < (bodyShapeNode.position.y - (bodyRect.size.y / 2))):
+	elif ((collisionBox == $CollisionBottom) && (position.y - playerVel.y) < (bodyShapeNode.position.y - (bodyRect.size.y / 2))):
 		colliding["bottom"] += 1;
 		position.y = bodyShapeNode.position.y - (bodyRect.size.y / 2) - (playerSize.y / 2);
 		onGround = true;

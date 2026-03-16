@@ -42,32 +42,32 @@ animations = [{
 }]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_8sknh"]
-a = Vector2(0, -12)
-b = Vector2(0, 11)
+a = Vector2(0, -10)
+b = Vector2(0, 9)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_0gfpk"]
-a = Vector2(0, -12)
-b = Vector2(0, 11)
+a = Vector2(0, -10)
+b = Vector2(0, 9)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_0hrit"]
-a = Vector2(22, 0)
-b = Vector2(-22, 0)
+a = Vector2(20, 0)
+b = Vector2(-20, 0)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_o5c66"]
-a = Vector2(22, 0)
-b = Vector2(-22, 0)
+a = Vector2(20, 0)
+b = Vector2(-20, 0)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_tc801"]
 a = Vector2(0, -5)
-b = Vector2(0, 5)
+b = Vector2(0, 3)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_60g6h"]
 a = Vector2(0, -5)
-b = Vector2(0, 5)
+b = Vector2(0, 3)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_hrrj1"]
-a = Vector2(23, 0)
-b = Vector2(-23, 0)
+a = Vector2(20, 0)
+b = Vector2(-20, 0)
 
 [node name="Player" type="Area2D" unique_id=1869804639]
 script = ExtResource("1_14505")
