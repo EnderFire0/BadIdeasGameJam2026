@@ -28,3 +28,6 @@ shape = SubResource("RectangleShape2D_65efp")
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Level Geometry" unique_id=639560507]
 position = Vector2(590.5, 633)
 shape = SubResource("RectangleShape2D_s68qs")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=271709269]
+visible = false
