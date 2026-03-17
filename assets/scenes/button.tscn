@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://qshfrm0l8sv7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_unl2x"]
+size = Vector2(40, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v0b7e"]
+
+[node name="Button" type="Area2D" unique_id=1823979508]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=821310921]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_unl2x")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1683214462]
+sprite_frames = SubResource("SpriteFrames_v0b7e")
