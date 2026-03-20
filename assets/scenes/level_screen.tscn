@@ -7,7 +7,10 @@
 size = Vector2(30, 648)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s68qs"]
-size = Vector2(1123, 30)
+size = Vector2(1122, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_81jc1"]
+size = Vector2(133, 30)
 
 [node name="LevelScreen" type="Node" unique_id=1208870112]
 script = ExtResource("1_65efp")
@@ -17,7 +20,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Player" parent="." unique_id=1869804639 instance=ExtResource("2_s68qs")]
-position = Vector2(353, 434)
+position = Vector2(225, 575)
 
 [node name="Level Geometry" type="StaticBody2D" parent="." unique_id=1977403684]
 
@@ -26,8 +29,12 @@ position = Vector2(15, 324)
 shape = SubResource("RectangleShape2D_65efp")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Level Geometry" unique_id=639560507]
-position = Vector2(590.5, 633)
+position = Vector2(591, 633)
 shape = SubResource("RectangleShape2D_s68qs")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Level Geometry" unique_id=1715536869]
+position = Vector2(96, 580)
+shape = SubResource("RectangleShape2D_81jc1")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=271709269]
 visible = false

@@ -33,7 +33,7 @@ func _process(delta: float) -> void:
 	if (Input.is_action_just_pressed("crouch") && onGround):
 		isCrouching = true;
 		playerMaxSpeed /= 2;
-	if (Input.is_action_just_released("crouch") && isCrouching):
+	if (!Input.is_action_pressed("crouch") && isCrouching && !colliding["defaultTop"]):
 		isCrouching = false;
 		playerMaxSpeed *= 2;
 	movement(delta);
